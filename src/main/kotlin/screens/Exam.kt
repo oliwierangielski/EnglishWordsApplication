@@ -14,7 +14,7 @@ fun Exam(onBack: () -> Unit) {
 
 
     var translations = remember { ReadFromFile() }
-    val fullTranslations = remember { translations.toList() }
+    val fullTranslations: List<String> = remember { translations.toList() }
     var points: Int by remember { mutableStateOf(0) }
     val maxPoints: Int = remember { translations.size }
     var isGameFinished: Boolean by remember { mutableStateOf(false) }

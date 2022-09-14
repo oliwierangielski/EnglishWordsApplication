@@ -3,11 +3,13 @@ package screens
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.Paths
 
 fun EditLineInFile(editLine: Int, gluedText: String){
-    val fileName = "words.txt"
-    val file = File(fileName)
+
+    val file = CreateAndReturnFile()
 
     val lines = file.readLines().toMutableList()
     lines[editLine] = gluedText
@@ -16,9 +18,8 @@ fun EditLineInFile(editLine: Int, gluedText: String){
     file.writeText(string)
 }
 
-fun DeleteFromFile(deleteLine: Int){
-    val fileName = "words.txt"
-    val file = File(fileName)
+fun DeleteFromFile(deleteLine: Int, isLastElement: Boolean){
+    val file = CreateAndReturnFile()
 
     val lines = file.readLines().toMutableList()
 
@@ -26,18 +27,16 @@ fun DeleteFromFile(deleteLine: Int){
 
     lines.removeAt(deleteLine)
 
-    val getLastIndex = lines.last()
-    lines[lines.lastIndex] = lines.last() + "\n"
-
+    if(!isLastElement){
+        lines[lines.lastIndex] = lines.last() + "\n"
+    }
     val string = lines.joinToString("\n")
     file.writeText(string)
+
 }
 
 fun WriteToFile(gluedText: String){
-    val fileName = "words.txt"
-    val file = File(fileName)
-
-    file.createNewFile()
+    val file = CreateAndReturnFile()
     file.appendText(gluedText)
 
 
@@ -46,9 +45,18 @@ fun WriteToFile(gluedText: String){
 
 fun ReadFromFile(): SnapshotStateList<String> {
 
-    val file = File("words.txt")
-
-    file.createNewFile()
-
+    val file = CreateAndReturnFile()
     return file.readLines().toMutableStateList()
+}
+
+fun CreateAndReturnFile(): File {
+    val path: Path = Paths.get(System.getProperty("user.home") + "/Documents/EnglishWordApplication")
+    val pathToFile: Path = Paths.get(System.getProperty("user.home") + "/Documents/EnglishWordApplication/words.txt")
+    if (Files.notExists(path)) {
+        File(path.toString()).mkdir()
+    }
+    if (Files.notExists(pathToFile)) {
+        File(pathToFile.toString()).createNewFile()
+    }
+    return File(pathToFile.toString())
 }

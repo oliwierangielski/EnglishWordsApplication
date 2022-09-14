@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package navigator
 
 import androidx.compose.runtime.Composable
